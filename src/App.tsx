@@ -5,8 +5,11 @@ import elip1 from "./assets/ellip_1.svg";
 import screen from "./assets/screen.svg"
 import { useState } from "react";
 import { Route, Routes } from "react-router-dom";
+import Tasks from "./pages/Tasks";
+import { useNavigate } from "react-router-dom";
 
 function App() {
+  const navigate = useNavigate()
   const [signedIn,setSignedIn] = useState(true)
 
   return (
@@ -28,7 +31,7 @@ function App() {
             </p>
           </div>
           <div className="mt-4">
-            <div className="bg-[#292929] text-white font-bold h-[48px] rounded-xl justify-center items-center flex gap-x-2 cursor-pointer">
+            <div className="bg-[#292929] text-white font-bold h-[48px] rounded-xl justify-center items-center flex gap-x-2 cursor-pointer" onClick={()=> {setSignedIn(!signedIn);navigate('/tasks')} }>
               <img src={google} />
               Continue with Google
             </div>
@@ -55,7 +58,7 @@ function App() {
       </div>
     </div>
     : <Routes>
-      <Route path="/tasks" Component={}/>
+      <Route path="/tasks" Component={Tasks}/>
       </Routes>
     } 
     </>

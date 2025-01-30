@@ -19,15 +19,17 @@ const analytics = getAnalytics(app);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 
-const signInWithGoogle = () => {
-  signInWithPopup(auth, provider)
-    .then((result) => {
-      console.log(result.user);
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-};
+
+
+async function signInWithGoogle() {
+  try {
+    const result = await signInWithPopup(auth, provider);
+    return result.user;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
 
 const signOutUser = () => {
   signOut(auth)

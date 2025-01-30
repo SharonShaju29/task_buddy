@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import plus from '../assets/plus.svg'
 
 interface AccordionProps {
   header: string;
@@ -78,9 +79,18 @@ const AccordionWithTable: React.FC<AccordionProps> = ({
               </tr>
             </thead>
             <tbody>
-              {tableData.map((item) => (
+            {header === 'Todo' && <tr className="flex border-b-2 pb-1">
+                 <div className="w-full flex gap-x-1 pl-3">
+                  <img src={plus} height={24} width={24}/>
+                  ADD Task 
+                 </div>
+      
+               </tr>}
+             
+              {tableData.map((item,index) => (
+            
                 <tr key={item.id} className="flex items-center">
-                  <td className="border px-2 py-2 gap-x-2 flex w-3/4 items-center">
+                  <td className="px-2 py-2 gap-x-2 flex w-3/4 items-center">
                     <input
                       type="checkbox"
                       checked={item.checked}
@@ -88,14 +98,14 @@ const AccordionWithTable: React.FC<AccordionProps> = ({
                     />
                     {item.name}
                   </td>
-                  <td className="border px-2 py-2 w-1/2 flex">{item.dueOn}</td>
-                  <td className="border px-2 py-2 w-1/2 flex">
+                  <td className="px-2 py-2 w-1/2 flex">{item.dueOn}</td>
+                  <td className="px-2 py-2 w-1/2 flex">
                     <div className="flex justify-center items-center bg-[#DDDADD] rounded-md px-2 py-1">{item.status}</div>
                   </td>
-                  <td className="border px-2 py-2 w-3/5 flex">
+                  <td className="px-2 py-2 w-3/5 flex">
                     {item.category}
                   </td>
-                  <td className="border px-2 py-2 w-1/10 flex">:</td>
+                  <td className="px-2 py-2 w-1/10 flex">:</td>
                 </tr>
               ))}
             </tbody>

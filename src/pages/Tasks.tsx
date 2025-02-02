@@ -41,12 +41,7 @@ const Tabs = ({
     useState<any>(inProgressList);
   const [filteredCompletedList, setFilteredCompletedList] =
     useState<any>(completedList);
-  const userData = useSelector((state: RootState) => state.main.user) as {
-    photoURL: string;
-  };
   const [selectedTasks, setSelectedTasks] = useState<any[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState("Category");
-  const [searchQuery, setSearchQuery] = useState("");
   const [showStatusOptions, setShowStatusOptions] = useState(false);
 
   const isMobile = useMediaQuery("(max-width:800px)");
@@ -89,7 +84,6 @@ const Tabs = ({
   const handleSelect = (value: string, type: string) => {
     let state = selectedFilter;
     if (type === "category") {
-      if (value === "All") setSelectedCategory("Category");
       if (value === "All") setFilteredTodoList(todoList);
       else
         setFilteredTodoList(
@@ -496,8 +490,6 @@ const Tasks = () => {
     setDefaultOpt(item.task_status)
     setUpdateObjID(item.id)
   };
-
-  async function handleEditCloseModal() {}
 
   const [editorContent, setEditorContent] = useState("");
 

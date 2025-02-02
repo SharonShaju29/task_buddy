@@ -2,37 +2,29 @@ import task from "../assets/task.svg";
 import google from "../assets/google.svg";
 import elip1 from "../assets/ellip_1.svg";
 import screen from "../assets/screen.svg";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { signInWithGoogle } from "../../firebaseConfig";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../store";
+import { useDispatch } from "react-redux";
 import { updateUser,updateSignin } from "../store/Reducers/main";
 import { useMediaQuery } from "@mui/material";
 import circles from "../assets/mobileCircles.png"
 
 function Login() {
   const navigate = useNavigate();
-  const [signedIn, setSignedIn] = useState(false);
   const dispatch = useDispatch();
-  const myData = useSelector((state: RootState) => state.main.user) as {
-    email?: string;
-  };
 
-  // useEffect(() => {
-  //   const token = localStorage.getItem('access_token') || ''
-  //   const userData = localStorage.getItem('user_data') || ''
-  //   if(userData) {
-  //     dispatch(updateUser(JSON.parse(userData)))
-  //   }
-  //   if(token) {
-  //     dispatch(updateSignin(true))
-  //     setSignedIn(true)
-  //     navigate('/tasks')
-  //   } else {
-  //     setSignedIn(false)
-  //   }
-  // }, []);
+  useEffect(() => {
+    const token = localStorage.getItem('access_token') || ''
+    const userData = localStorage.getItem('user_data') || ''
+    if(userData) {
+      dispatch(updateUser(JSON.parse(userData)))
+    }
+    if(token) {
+      dispatch(updateSignin(true))
+      navigate('/tasks')
+    } 
+  }, []);
 
   function handleSignin() {
     signInWithGoogle()
@@ -41,7 +33,6 @@ function Login() {
         console.log(userData)
         localStorage.setItem('access_token', userData.accessToken)
         localStorage.setItem('user_data',JSON.stringify(userData))
-        setSignedIn(true)
         dispatch(updateSignin(true));
         navigate('/tasks')
       })

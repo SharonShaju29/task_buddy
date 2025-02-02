@@ -1,10 +1,5 @@
 import React, { useState, useEffect } from "react";
-import plus from "../assets/plus.svg";
-import { addUserData, deleteById, update } from "../firebase/queries";
-import { useSelector } from "react-redux";
-import { RootState } from "../store";
-import tickDisabled from "../assets/tick_disabled.svg";
-import tickActive from "../assets/tick_active.svg";
+import { deleteById } from "../firebase/queries";
 import actions from "../assets/actions.svg";
 import edit from "../assets/edit_icon.svg";
 import deleteIcon from "../assets/delete_icon.svg";
@@ -31,32 +26,12 @@ interface BoardProps {
 
 const Board: React.FC<BoardProps> = ({
   header,
-  count,
   color,
-  arrow,
   data,
   getList,
-  multiselect,
   handleEdit,
-  selectedTasks,
 }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [isAddTaskOpen, setIsAddTaskOpen] = useState(false);
   const [tableData, setTableData] = useState(data);
-  const [dropdown1Open, setDropdown1Open] = useState(false);
-  const [dropdown2Open, setDropdown2Open] = useState(false);
-  const [selectedStatus, setSelectedStatus] = useState<string | null>(null);
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [statusDropdownOpen, setStatusDropdownOpen] = useState<number | null>(
-    null
-  );
-  const [taskTitle, setTaskTitle] = useState("");
-  const [taskDueOn, setDueOn] = useState("");
-  const userData = useSelector((state: RootState) => state.main.user) as {
-    email: any;
-    photoURL: string;
-    displayName: string;
-  };
   const [dropdownOpen, setDropdownOpen] = useState(0);
 
   async function handleDelete(id: any) {
@@ -69,62 +44,6 @@ const Board: React.FC<BoardProps> = ({
     setTableData(data);
   }, [data]);
 
-  const toggleAccordion = () => {
-    setIsOpen(!isOpen);
-  };
-
-  const toggleAddTaskSection = () => {
-    setIsAddTaskOpen(!isAddTaskOpen);
-  };
-
-  const handleDropdown1Toggle = () => {
-    setDropdown1Open(!dropdown1Open);
-  };
-
-  const handleDropdown2Toggle = () => {
-    setDropdown2Open(!dropdown2Open);
-  };
-
-  const handleOptionSelect1 = (option: string) => {
-    setSelectedStatus(option);
-    setDropdown1Open(false);
-  };
-
-  const handleOptionSelect2 = (option: string) => {
-    setSelectedCategory(option);
-    setDropdown2Open(false);
-  };
-
-  const handleStatusDropdownToggle = (id: number) => {
-    setStatusDropdownOpen(statusDropdownOpen === id ? null : id);
-  };
-
-  const handleStatusSelect = async (id: number, status: string) => {
-    await update(id, { task_status: status });
-    getList();
-    setStatusDropdownOpen(null);
-  };
-
-  const handleTaskCreation = async () => {
-    let payload: {
-      task_title: string;
-      task_category: string | null;
-      due_on: string | null;
-      task_status: string | null;
-      email_id: any;
-      created_at: Date;
-    } = {
-      task_title: taskTitle,
-      task_category: selectedCategory,
-      due_on: taskDueOn,
-      task_status: selectedStatus,
-      email_id: userData.email,
-      created_at: new Date(),
-    };
-
-    addUserData(payload);
-    getList();
-  };
 
   return (
     <div className="accordion border rounded-2xl shadow-md w-[330px] bg-[#F1F1F1] h-[60vh] overflow-hidden">

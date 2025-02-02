@@ -202,6 +202,7 @@ const Tabs = ({
                   options={optionsCategory}
                   onSelect={(value) => handleSelect(value, "category")}
                   placeholder={"Category"}
+                  bg={'white'}
                 />
                 <input
                   type="date"
@@ -291,6 +292,7 @@ const Tabs = ({
                  options={optionsCategory}
                  onSelect={(value) => handleSelect(value, "category")}
                  placeholder={"Category"}
+                 bg="white"
                />
                <input
                  type="date"
@@ -362,8 +364,8 @@ const Tabs = ({
       </div>
 
       {showMultiSelectBox ? (
-        <div className="h-[52px] fixed bottom-4 left-[35vw] w-[30vw] flex justify-center">
-          <div className="h-[52px] w-[30vw] flex items-center justify-between px-3 bg-[#1A1C20] rounded-xl z-20">
+        <div className="h-[52px] fixed bottom-4 left-[5vw] md:left-[35vw] w-[90vw] md:w-[30vw] flex justify-center">
+          <div className="h-[52px] w-[90vw] md:w-[30vw] flex items-center justify-between px-3 bg-[#1A1C20] rounded-xl z-20">
             <div className="flex items-center gap-x-2">
               <div className="h-[28px] w-[136px] flex items-center justify-center border rounded-xl border-white text-white gap-x-2 px-1 text-[12px]">
                 {selectedTasks.length} Task(s) Selected{" "}
@@ -454,11 +456,17 @@ const Tasks = () => {
   };
 
   const handleAddTaskClick = () => {
+    setActionButtonText("Create")
+    setModalHeader("Create Task")
     setIsModalVisible(true);
   };
 
   const handleCloseModal = () => {
     setIsModalVisible(false);
+      setTaskTitle('')
+      setEditorContent('')
+      setSelectedCategory('')
+      setDueDate('')
   };
 
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -476,7 +484,7 @@ const Tasks = () => {
 
   const [modalHeader, setModalHeader] = useState("Create Task");
   const [actionButtonText, setActionButtonText] = useState("Create");
-  const [defaultOpt,setDefaultOpt] = useState('')
+  const [defaultOpt,setDefaultOpt] = useState('TODO')
   const [updateObjId,setUpdateObjID] = useState('')
 
   const handleEditModal = (item: any) => {
@@ -549,6 +557,16 @@ const Tasks = () => {
     console.log(response);
   }
 
+  const [modalActionDisabled,setModalActionDisabled] = useState(false)
+
+  useEffect(()=>{
+     if(taskTitle && selectedCategory && dueDate) {
+      setModalActionDisabled(false)
+     } else {
+      setModalActionDisabled(true)
+     }
+  },[taskTitle,selectedCategory,dueDate])
+
   useEffect(() => {
     getTaskList();
   }, []);
@@ -563,7 +581,7 @@ const Tasks = () => {
               TaskBuddy
             </span>
           </div>
-          <div className="flex gap-x-1 items-center pr-8 relative">
+          <div className="flex gap-x-1 items-center md:pr-8 relative">
             {userData.photoURL && (
               <img
                 src={userData.photoURL}
@@ -604,9 +622,10 @@ const Tasks = () => {
       <Modal
         header={modalHeader}
         isVisible={isModalVisible}
-        onClose={ handleCloseModal
+        onClose={()=> handleCloseModal()
         }
         actionButtonText={actionButtonText}
+        modalActionDisabled={modalActionDisabled}
         onAction={()=>
           actionButtonText === "Create" ? handleTask('create') : handleTask('update')
         }
@@ -695,6 +714,7 @@ const Tasks = () => {
                   placeholder={"Select Status"}
                   styles={"bg-[#F1F1F15C] text-[#0000007A] rounded-md"}
                   defaultOpt={defaultOpt}
+                  bg="#F1F1F15C"
                 />
               </div>
             </div>
@@ -737,8 +757,9 @@ export default Tasks;
 interface ModalProps {
   header: string;
   isVisible: boolean;
-  onClose: () => void;
+  onClose: (type:string) => void;
   children: React.ReactNode;
+  modalActionDisabled: boolean;
 }
 
 const Modal = ({
@@ -746,13 +767,14 @@ const Modal = ({
   isVisible,
   onClose,
   children,
+  modalActionDisabled,
   actionButtonText,
   onAction,
 }: ModalProps & { actionButtonText: string; onAction: () => void }) => {
   if (!isVisible) return null;
 
   const handleClose = (e: any) => {
-    if (e.target.id === "modal-backdrop") onClose();
+    if (e.target.id === "modal-backdrop") onClose(actionButtonText);
   };
 
   return (
@@ -764,7 +786,7 @@ const Modal = ({
       <div className="bg-white rounded-t-3xl -bottom-[10%] md:bottom-0 md:rounded-xl shadow-lg relative w-full h-[80%]  md:w-[70%] md:h-[85%]">
         <div className="sticky top-0 px-4 py-2 w-full justify-between flex items-center border-b">
           <span className="font-medium text-[24px]">{header}</span>
-          <button onClick={onClose} className="rounded-full bg-white">
+          <button onClick={()=>onClose(actionButtonText)} className="rounded-full bg-white">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -784,13 +806,15 @@ const Modal = ({
         <div className="py-2 flex-grow overflow-hidden h-[80%]">{children}</div>
         <div className="absolute bottom-0 px-4 py-2 w-full flex justify-end border-t bg-white rounded-lg">
           <button
-            onClick={onClose}
+            onClick={()=>onClose(actionButtonText)}
             className="mr-2 px-4 py-2 bg-gray-200 rounded-3xl"
           >
             Cancel
           </button>
           <button
             onClick={onAction}
+            disabled={modalActionDisabled}
+            style={modalActionDisabled ? {opacity:0.5, cursor:'not-allowed'}:{}}
             className="px-4 py-2 bg-[#7B1984] text-white rounded-3xl"
           >
             {actionButtonText}

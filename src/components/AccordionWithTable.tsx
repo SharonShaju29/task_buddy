@@ -10,6 +10,7 @@ import edit from "../assets/edit_icon.svg"
 import deleteIcon from "../assets/delete_icon.svg"
 import { formatDate } from "../utils/date";
 import { useMediaQuery } from "@mui/material";
+import union from "../assets/Union.svg"
 
 interface AccordionProps {
   header: string;
@@ -76,7 +77,17 @@ const AccordionWithTable: React.FC<AccordionProps> = ({
     setIsOpen(!isOpen);
   };
 
+  function resetAddData() {
+    setTaskTitle('')
+    setDueOn('')
+    setSelectedCategory('')
+    setSelectedStatus('')
+  }
+
   const toggleAddTaskSection = () => {
+    if(isAddTaskOpen) {
+      resetAddData()
+    }
     setIsAddTaskOpen(!isAddTaskOpen);
   };
 
@@ -276,10 +287,12 @@ const AccordionWithTable: React.FC<AccordionProps> = ({
                         </div>
                         <div className="w-full flex gap-x-2 pl-3">
                           <button
-                            className="bg-[#7B1984] text-white px-4 py-2 rounded-3xl"
+                            className="bg-[#7B1984] text-white px-4 flex items-center gap-x-1 py-2 rounded-3xl"
                             onClick={handleTaskCreation}
+                            style={(!taskTitle || !setDueOn || !selectedStatus || !selectedCategory) ? {opacity:0.5,cursor:'not-allowed'}:{} }
+                            disabled={!taskTitle || !setDueOn || !selectedStatus || !selectedCategory}
                           >
-                            Add Task
+                            Add Task <img src={union}/>
                           </button>
                           <button
                             className="text-black px-4 py-2 rounded bg-inherit border-none"
@@ -296,13 +309,13 @@ const AccordionWithTable: React.FC<AccordionProps> = ({
               
               {tableData.map((item) => (
                 <tr key={item.id} className="flex items-center border-b-2 ">
-                  <td className="px-2 py-2 gap-x-2 flex w-3/4 items-center">
+                  <td className="px-2 py-2 gap-x-2 flex  min-w-max md:w-3/4 items-center">
                     <input
                       type="checkbox"
                       className="cursor-pointer"
                       checked={selectedTasks.includes(item.id.toString())}
                       onChange={() => multiselect(item.id)}
-                      style={{accentColor:arrow}}
+                      style={selectedTasks.includes(item.id.toString()) ? {accentColor:arrow}:{}}
                     />
 
                     <img

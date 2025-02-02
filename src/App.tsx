@@ -10,16 +10,18 @@ function App() {
   const signedIn = useSelector((state: RootState) => state.main.signedIn)
   const navigate = useNavigate()
 
-  useEffect(()=>{
-    if(signedIn)
-   navigate('/tasks')
-  },[signedIn])
+  // useEffect(()=>{
+  //   if(signedIn)
+  //  navigate('/tasks')
+  // },[signedIn])
 
   return (
     <Routes>
-      <Route path="/" element={signedIn ? <Navigate to="tasks" /> : <Navigate to="login" />} />
+      {/* <Route path="/" element={signedIn ? <Navigate to="tasks" /> : <Navigate to="login" />} /> */}
       <Route path="login" element={<Login />} />
-      <Route path="tasks" element={signedIn ? <Tasks /> : <Navigate to="/login" />} />
+      {/* <Route path="/tasks" element={signedIn ? <Tasks /> : <Navigate to="/login" />} /> */}
+      <Route path="/tasks" element={<Tasks />} />
+
     </Routes>
   );
 }

@@ -1,7 +1,7 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
-
 import { getAnalytics } from "firebase/analytics";
+import { getFirestore } from 'firebase/firestore';
 
 const firebaseConfig = {
   apiKey: "AIzaSyAQ_ghpYDwf5OZ_7huYSIxQe7z3Msvgxbs",
@@ -13,13 +13,11 @@ const firebaseConfig = {
   measurementId: "G-D9J6HGDYRY"
 };
 
-
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
-
-
+const db = getFirestore(app);
 
 async function signInWithGoogle() {
   try {
@@ -41,4 +39,4 @@ const signOutUser = () => {
     });
 };
 
-export { auth, signInWithGoogle, signOutUser };
+export { auth, signInWithGoogle, signOutUser, db };

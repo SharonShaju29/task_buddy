@@ -1,25 +1,41 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 interface CustomSelectProps {
     options: string[];
-    onSelect: (value: string) => void;
+    onSelect: (value: string,type: string) => void;
     placeholder?: string;
+    styles?: string;
+    defaultOpt?:string;
 }
 
-const CustomSelect: React.FC<CustomSelectProps> = ({ options, onSelect, placeholder = "Select an option" }) => {
-    const [selectedOption, setSelectedOption] = useState<string | null>(null);
+const CustomSelect: React.FC<CustomSelectProps> = ({ options, onSelect, defaultOpt, placeholder = "Select an option",styles }) => {
+    const [selectedOption, setSelectedOption] = useState<string | null | undefined>(null);
     const [isOpen, setIsOpen] = useState(false);
+
+    useEffect(()=>{
+        if(defaultOpt)
+      setSelectedOption(defaultOpt)
+    },[defaultOpt])
 
     const handleOptionClick = (option: string) => {
         setSelectedOption(option);
-        onSelect(option);
+        let type = '';
+        if(placeholder==='Category') {
+            type='category'
+            if(option==="All")
+                setSelectedOption('')
+        }
+        else if(placeholder === 'Due Date') 
+            type = 'Due Date'
+
+        onSelect(option,type);
         setIsOpen(false);
     };
 
     return (
-        <div className="relative inline-block w-[90px]">
+        <div className="relative inline-block min-w-[90px]">
             <div
-                className="bg-white border border-gray-300 rounded-2xl p-2 cursor-pointer flex justify-between items-center"
+                className={`bg-white border border-gray-300 w-[120px] rounded-2xl p-2 cursor-pointer flex justify-between items-center ${styles}`}
                 onClick={() => setIsOpen(!isOpen)}
             >
                 <span>{selectedOption || placeholder}</span>
@@ -41,7 +57,7 @@ const CustomSelect: React.FC<CustomSelectProps> = ({ options, onSelect, placehol
                 </span>
             </div>
             {isOpen && (
-                <div className="absolute mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg z-10">
+                <div className="absolute mt-1 w-full bg-white border text-left border-gray-300 rounded-md shadow-lg z-10">
                     {options.map((option, index) => (
                         <div
                             key={index}

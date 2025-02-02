@@ -761,7 +761,7 @@ const Modal = ({
       className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
       onClick={handleClose}
     >
-      <div className="bg-white rounded-t-3xl -bottom-[10%] md:rounded-xl shadow-lg relative w-full h-[80%]  md:w-[70%] md:h-[85%]">
+      <div className="bg-white rounded-t-3xl -bottom-[10%] md:bottom-0 md:rounded-xl shadow-lg relative w-full h-[80%]  md:w-[70%] md:h-[85%]">
         <div className="sticky top-0 px-4 py-2 w-full justify-between flex items-center border-b">
           <span className="font-medium text-[24px]">{header}</span>
           <button onClick={onClose} className="rounded-full bg-white">
